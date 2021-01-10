@@ -74,7 +74,7 @@
     }
     else
     if(lastFed==0){
-      text("Last Feed : 12 AM",270,60);
+      text("Last Feed : 12 AM",350,30);
     }
     else{
     text("Last Feed :" + lastFed + "AM",350,30);
