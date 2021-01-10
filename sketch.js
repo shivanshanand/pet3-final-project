@@ -21,7 +21,7 @@
     createCanvas(600, 500);
 
     dog=createSprite(250,300,20,20)
-    dog.addImage(dogImg);
+    dog.addImage("doggie",dogImg);
     dog.scale=0.2;
 
     database=firebase.database();
@@ -41,6 +41,11 @@
     readState=database.ref('gameState');
     readState.on("value",function(data){
       gameState=data.val();
+    })
+
+    fedTime=database.ref('FeedTime');
+    fedTime.on("value",function(data){
+      lastFed=data.val();
     })
 
   }
@@ -64,11 +69,6 @@
 
     food1.display();
 
-    fedTime=database.ref('FeedTime');
-    fedTime.on("value",function(data){
-      lastFed=data.val();
-    })
-
     if(lastFed>=12){
       text("Last Feed :"+lastFed%12 +"PM",350,30);
     }
@@ -78,16 +78,6 @@
     }
     else{
     text("Last Feed :" + lastFed + "AM",350,30);
-    }
-
-    if(gameState!="Hungry"){
-      feed.hide();
-      addFood.hide();
-      dog.remove();
-    }else{
-      feed.show();
-      addFood.show();
-      dog.addImage(dogImg);
     }
 
     currentTime=hour();
@@ -105,6 +95,16 @@
       food1.display();
     }
 
+    if(gameState!="Hungry"){
+      feed.hide();
+      addFood.hide();
+      dog.remove();
+    }else{
+      feed.show();
+      addFood.show();
+      dog.addImage("doggie",dogImg);
+    }
+
     drawSprites();
   }
 
@@ -116,13 +116,15 @@
   }
 
   function feedDog(){
-    dog.addImage(dogImg2);
-
     food1.updateFoodStock(food1.getFoodStock()-1);
     database.ref('/').update({
       Food: food1.getFoodStock(),
       FeedTime:hour()
     })
+    database.ref('/').update({
+      gameState:"Hungry"
+    })
+    dog.addImage("doggie",dogImg2);
   }
 
   function addFoods(){
