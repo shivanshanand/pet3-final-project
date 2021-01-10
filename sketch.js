@@ -53,33 +53,6 @@
   function draw() {  
     background(46,139,87);
 
-   /* if ( keyWentDown( UP_ARROW ) ){
-      writeStock(foodS);
-      dog.addImage(dogImg2);
-    } */
-
-    noStroke();
-    fill("white")
-    textSize("90")
-    text("Note:Press UP_ARROW key to feed Drago Milk",80,30);
-
-    fill("blue")
-    textSize("60")
-    text("Food Remaining:"+ foodS,170,200);
-
-    food1.display();
-
-    if(lastFed>=12){
-      text("Last Feed :"+lastFed%12 +"PM",350,30);
-    }
-    else
-    if(lastFed==0){
-      text("Last Feed : 12 AM",350,30);
-    }
-    else{
-    text("Last Feed :" + lastFed + "AM",350,30);
-    }
-
     currentTime=hour();
     if(currentTime==(lastFed+1)){
       update("Playing");
@@ -95,14 +68,36 @@
       food1.display();
     }
 
-    if(gameState!="Hungry"){
+    noStroke();
+    fill("white")
+    textSize("90")
+    text("Note:Press UP_ARROW key to feed Drago Milk",80,30);
+
+    fill("blue")
+    textSize("60")
+    text("Food Remaining:"+ foodS,170,200);
+
+   // food1.display();
+
+    if(lastFed>=12){
+      text("Last Feed :"+lastFed%12 +"PM",350,30);
+    }
+    else
+    if(lastFed==0){
+      text("Last Feed : 12 AM",350,30);
+    }
+    else{
+    text("Last Feed :" + lastFed + "AM",350,30);
+    }
+
+    if(gameState!=Hungry){
       feed.hide();
       addFood.hide();
       dog.remove();
     }else{
       feed.show();
       addFood.show();
-      dog.addImage("doggie",dogImg);
+      dog.addImage(dogImg);
     }
 
     drawSprites();
@@ -116,13 +111,13 @@
   }
 
   function feedDog(){
+    database.ref('/').update({
+      gameState:"Hungry"
+    })
     food1.updateFoodStock(food1.getFoodStock()-1);
     database.ref('/').update({
       Food: food1.getFoodStock(),
       FeedTime:hour()
-    })
-    database.ref('/').update({
-      gameState:"Hungry"
     })
     dog.addImage("doggie",dogImg2);
   }
