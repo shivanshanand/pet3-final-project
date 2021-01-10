@@ -90,7 +90,7 @@
     text("Last Feed :" + lastFed + "AM",350,30);
     }
 
-    if(gameState!=Hungry){
+    if(gameState!="Hungry"){
       feed.hide();
       addFood.hide();
       dog.remove();
